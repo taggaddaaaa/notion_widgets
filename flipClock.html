@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,230 +7,191 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>FlipClock Web</title>
+    <title>FlipClock</title>
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
-
-        :root {
-            --background: black;
-            --line: black;
-            --text: #b7b7b7;
-            --holder: #101010;
-            --theme_container_border: rgba(146, 146, 146, 0.481);
-            --theme-secondary: white;
-            --theme_shadow: black;
-            --partner-ad-background: #414141;
-        }
-
-        .preview p:hover {
-            background-color: rgba(179, 179, 179, 0.308);
-            border-radius: .5rem;
-        }
-
-        html,
-        body {
-            background-color: var(--background);
-            margin: 0;
-            padding: 0;
-            height: 100%;
-
-            font-family: "Bebas Neue",sans-serif;
-            cursor: default;
-        }
-
-        .hide {
-            display: none !important;
-        }
-
-        svg {
-            fill: var(--holder);
-            filter: contrast(60%);
-            transition: all 0.2s ease;
-        }
-
-        svg:hover {
-            fill: var(--text);
-        }
-
-        input[type=range] {
-            -webkit-appearance: none;
-            height: 15px;
-            width: 6rem;
-            border-radius: 5px;
-            outline: none;
-            -webkit-transition: opacity .2s;
-            transition: all .2s ease-in-out;
-        }
-
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 22px;
-            height: 22px;
-            background: var(--text);
-            border-radius: 25%;
-            cursor: pointer !important;
-        }
-
-        .plan_toggle_div>p {
-            font-size: clamp(.9rem, 1vw, 1.3vw);
-            color: var(--text);
-            font-weight: bold;
-        }
-
-
-        @keyframes widthAnimation {
-            0% {
-                width: 60px;
-            }
-
-            100% {
-                width: 150px;
-            }
-        }
-
-        @keyframes jiggleAnimation {
-            0% {
-                transform: rotateZ(3deg);
-            }
-
-            50% {
-                transform: rotateZ(-3deg);
-            }
-
-            100% {
-                transform: rotateZ(0);
-            }
-        }
-
-
-        .line {
-            width: 100%;
-            height: 8px;
-            background-color: var(--holder);
-            position: absolute;
-            top: 50%;
-            z-index: 2;
-        }
-
-        .container {
-            height: 100%;
-            display: flex;
-            flex-direction: row;
-            padding: 0 1% 0 1%;
-            transition: all .2s ease-out;
-        }
-
-        .holder {
-            position: relative;
-
-            width: 100%;
-            margin: auto 1%;
-
-            justify-content: center;
-            align-items: center;
-            background-color: var(--holder);
-            border-radius: 50px;
-        }
-
-        .holder h1 {
-            color: var(--text);
-            font-size: clamp(30vw, 40vw, 50vw);
-
-            margin: auto;
-            text-align: center;
-            font-weight: 100;
-            transition: all 0.5s;
-        }
-
-        .holder h2 {
-            position: absolute;
-            top: 75%;
-            color: var(--text);
-
-            font-size: clamp(3vw, 4vw, 5vw);
-
-            font-family: Arial,sans-serif;
-            font-weight: bold;
-
-            margin-left: 7%;
-            text-align: left;
-        }
-
-
-        #feature_toggle,
-        #feature_toggle1 {
-            position: absolute;
-            top: 5%;
-            right: 5%;
-            width: 15px;
-            cursor: pointer;
-        }
-        .support_tagline>p {
-            margin: 0;
-        }
-
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(.9);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        *::after, *::before, .flip_container * {
-            box-sizing: border-box;
-            font-size: clamp(30vw,40vw,50vw);
-            color: var(--text);
-            transition: all .5s;
-        }
-        .flip-card {
-            position: relative;
-            display: inline-flex;
-            flex-direction: column;
-            border-radius: .1em;
-            width: 100%;
-        }
-
-        /* ISSUE FIXED */
-        .flip_container{
-            padding: 8.6% 0;
-        }
-        .segment{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        /* ISSUE FIXED */
-
-        @keyframes flip-top {
-            100% {
-                transform: rotateX(90deg);
-            }
-        }
-
-        @keyframes flip-bottom {
-            100% {
-                transform: rotateX(0deg);
-            }
-        }
-    </style>
-
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" defer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
             integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+<style>
+
+    /* latin-ext */
+    @font-face {
+        font-family: 'Bebas Neue';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url(https://fonts.gstatic.com/s/bebasneue/v14/JTUSjIg69CK48gW7PXoo9WdhyyTh89ZNpQ.woff2) format('woff2');
+        unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    }
+    /* latin */
+    @font-face {
+        font-family: 'Bebas Neue';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url(https://fonts.gstatic.com/s/bebasneue/v14/JTUSjIg69CK48gW7PXoo9WlhyyTh89Y.woff2) format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+
+
+    :root {
+        --background: black;
+        --line: black;
+        --text: #b7b7b7;
+        --holder: #101010;
+        --theme_container_border: rgba(146, 146, 146, 0.481);
+        --theme-secondary: white;
+        --theme_shadow: black;
+        --partner-ad-background: #414141;
+    }
+
+    html,
+    body {
+        background-color: var(--background);
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: "Bebas Neue";
+        cursor: default;
+    }
+
+
+    .line {
+        width: 100%;
+        height: 8px;
+        background-color: var(--holder);
+        position: absolute;
+        top: 50%;
+        z-index: 2;
+    }
+
+    .container {
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        padding: 0 1% 0 1%;
+        transition: all .2s ease-out;
+    }
+
+    .holder {
+        position: relative;
+
+        width: 100%;
+
+        margin: auto 1%;
+
+        justify-content: center;
+        align-items: center;
+        background-color: var(--holder);
+
+        border-radius: 50px;
+    }
+
+    .holder h1 {
+        color: var(--text);
+
+        font-size: clamp(30vw, 40vw, 50vw);
+
+        margin: auto;
+        text-align: center;
+        font-weight: 100;
+        transition: all 0.5s;
+    }
+
+    .holder h2 {
+        position: absolute;
+        top: 75%;
+
+        color: var(--text);
+        font-size: clamp(3vw, 4vw, 5vw);
+
+        font-family: Arial;
+        font-weight: bold;
+
+        margin-left: 7%;
+        text-align: left;
+    }
+
+    @media only screen and (max-width: 1200px) {
+        .line {
+            height: 5px;
+        }
+
+        .holder {
+            border-radius: 20px;
+            margin: auto 5px;
+        }
+
+
+        @media only screen and (orientation: portrait) {
+
+            /* FOR MAKING CLOCK IN COLUMN FORMAT */
+            .container {
+                flex-direction: column;
+                display: flex;
+                gap: 2rem;
+                width: 55%;
+                margin: 0 auto;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .holder {
+                margin: 0 !important;
+            }
+
+            /* FOR MAKING CLOCK IN COLUMN FORMAT */
+        }
+
+        @media only screen and (orientation: landscape) {
+            .container {
+                transform: scale(.9);
+                gap: 1rem;
+            }
+        }
+    }
+
+
+    @media only screen and (max-width: 900px) {
+        @media screen and (orientation: landscape) {
+            .container {
+                transform: scale(.7);
+            }
+        }
+    }
+
+
+    *::after, *::before, .flip_container * {
+        box-sizing: border-box;
+        font-size: clamp(30vw,40vw,50vw);
+        color: var(--text);
+        transition: all .5s;
+    }
+    .flip-card {
+        position: relative;
+        display: inline-flex;
+        flex-direction: column;
+        border-radius: .1em;
+        width: 100%;
+    }
+
+    .flip_container{
+        padding: 8.6% 0;
+    }
+    .segment{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+
+</style>
+
 </head>
 
 <body>
 <div class="line"></div>
-
 
 <!-- FLIP CLOCK -->
 <div class="container">
@@ -253,7 +215,6 @@
     <div class="holder" data-holder-tens>
         <h1 id='minutes'>33</h1>
 
-        <h1 class="hidden_0 hide" style="position: absolute; left: 16%; color: var(--text);z-index:1;">0</h1>
         <div class="flip_container">
             <div class="container-segment">
                 <div class="segment">
@@ -269,21 +230,29 @@
 </div>
 
 </body>
+
 <script>
-	const feature_pop = document.getElementsByClassName("features_popup")[0];
-	const feature_close = document.getElementById("feature_toggle");
-	const feature_close1 = document.getElementById("feature_toggle1");
+	// CUSTOM SIZE FOR CLOCK WHEN ZOOMING OUT
+	var clock_container = document.querySelector('.container');
+	window.addEventListener('resize', () => {
+		const browserZoomLevel = Math.round(window.devicePixelRatio * 100 - 100);
 
-	feature_close.onclick = function () {
-		feature_pop.style.display = "none";
-	};
-
-	feature_close1.onclick = function () {
-		feature_pop.style.display = "none";
-	}
-
-	document.getElementsByClassName("features_popup")[0].style.display = "none";
-
+		// scale the clock_container
+		if (window.innerWidth > 1000){
+			if (browserZoomLevel){
+				clock_container.style.transform = "scale(" + browserZoomLevel / 100 + ")";
+			}
+			if (browserZoomLevel / 100 <= 0){
+				clock_container.style.transform = "scale(0.7)";
+			}
+			if (browserZoomLevel >= 100){
+				clock_container.style.transform = "scale(1)";
+			}
+		}
+		else{
+			clock_container.style.transform = "scale(1)";
+		}
+	})
 
 	// DISPLAY NONE FLIP CLOCKS
 	document.getElementsByClassName('flip_container')[0].style.display = "none";
@@ -297,6 +266,8 @@
 
 	setInterval(showTime, 1000);
 	function showTime() {
+		// console.log('chechking')
+
 		let time = new Date();
 		let hour = time.getHours();
 		let min = time.getMinutes();
@@ -310,6 +281,29 @@
 		}
 		if (hour === 0) {
 			hour = 12;
+		}
+
+
+		// NO FLIP ANIMATION
+		function defaultClock(){
+			hour = hour < 10 ? "" + hour : hour;
+			min = min < 10 ? "0" + min : min;
+
+			hour24 = hour24 < 10 ? "" + hour24 : hour24;
+			min24 = min24 < 10 ? "0" + min24 : min24;
+
+
+			if (toggleButton24h.checked){
+				document.getElementById("hours").innerHTML = hour24;
+				document.getElementById("minutes").innerHTML = min24;
+			}
+			else{
+				document.getElementById("hours").innerHTML = hour;
+				document.getElementById("minutes").innerHTML = min;
+			}
+
+			document.getElementById('minutes').style.display = "block";
+			document.getElementById('hours').style.display = "block";
 		}
 
 		// FLIP ANIMATION
@@ -350,9 +344,9 @@
 			document.getElementById('hours').style.display = "none";
 			document.getElementById('minutes').style.display = "none";
 		}
-
 		flipClock();
 	}
+
 	showTime();
 
 	// FLIP ANIMATIONS MAIN FUNCTION
@@ -385,41 +379,9 @@
 		flipCard.append(topFlip, bottomFlip)
 	}
 
-	function time_zone(){
-		var time_zone_element = document.getElementById("ampm");
-		var time_zone = new Date();
-		time_zone_element.innerHTML = time_zone.toLocaleString('fr-FR', { hour: 'numeric', hour12: false }).slice(2, 5);
-	}
-
-	// SHOW PRO FEATURE
-	function showProFeatures() {
-		document.getElementsByClassName("features_popup")[0].style.display = "block";
-		document.getElementById("pro_feature").style.display = "block";
-		localStorage.setItem('visited', false);
-	}
-
-    // ALLOW THEMES / FLIP ANIMATION / TIME ZONES
-    document.querySelector('#pro_plus_subscription').style.display = "block";
-    document.querySelector('#upgrade').style.display = "none";
-
-    // TIME ZONE
-    setInterval(time_zone,1000)
-    time_zone();
-
-    document.getElementById("basic_feature").style.display = "none";
-    showProFeatures();
-
 	// remove localStorage THEME on reload
 	window.onbeforeunload = function() {
 		localStorage.removeItem('current_theme');
 	}
-    
 </script>
-<script>
-	$(document).tooltip({
-		show: null,
-		position: { my: "left+15", at: "right" }
-	});
-</script>
-
 </html>
