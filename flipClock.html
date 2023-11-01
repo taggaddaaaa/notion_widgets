@@ -87,7 +87,7 @@
         border-radius: 50px;
     }
 
-    .holder h1 {
+    .holder h2 {
         color: var(--text);
 
         font-size: clamp(30vw, 40vw, 50vw);
@@ -98,7 +98,7 @@
         transition: all 0.5s;
     }
 
-    .holder h2 {
+    .holder h3 {
         position: absolute;
         top: 75%;
 
@@ -195,7 +195,7 @@
 <!-- FLIP CLOCK -->
 <div class="container">
     <div class="holder">
-        <h1 id='hours'>5</h1>
+        <h2 id='hours'>5</h2>
 
         <div class="flip_container">
             <div class="container-segment">
@@ -208,11 +208,11 @@
             </div>
         </div>
 
-        <h2 id='ampm'>PM</h2>
+        <h3 id='ampm'>PM</h3>
     </div>
 
     <div class="holder" data-holder-tens>
-        <h1 id='minutes'>33</h1>
+        <h2 id='minutes'>33</h2>
 
         <div class="flip_container">
             <div class="container-segment">
@@ -227,115 +227,27 @@
 
     </div>
 </div>
-
 </body>
 
 <script>
-	// CUSTOM SIZE FOR CLOCK WHEN ZOOMING OUT
-	var clock_container = document.querySelector('.container');
-	window.addEventListener('resize', () => {
-		const browserZoomLevel = Math.round(window.devicePixelRatio * 100 - 100);
-
-		// scale the clock_container
-		if (window.innerWidth > 1000){
-			if (browserZoomLevel){
-				clock_container.style.transform = "scale(" + browserZoomLevel / 100 + ")";
-			}
-			if (browserZoomLevel / 100 <= 0){
-				clock_container.style.transform = "scale(0.7)";
-			}
-			if (browserZoomLevel >= 100){
-				clock_container.style.transform = "scale(1)";
-			}
-		}
-		else{
-			clock_container.style.transform = "scale(1)";
-		}
-	})
-
-	// DISPLAY NONE FLIP CLOCKS
-	document.getElementsByClassName('flip_container')[0].style.display = "none";
-	document.getElementsByClassName('flip_container')[1].style.display = "none";
-
 	// DISPLAY DEFAULT CLOCKS
 	document.getElementById('hours').style.display = "block";
 	document.getElementById('minutes').style.display = "block";
 
-	const toggleButton24h = document.getElementById("toggleButton24h");
-
-	setInterval(showTime, 1000);
 	function showTime() {
-		// console.log('chechking')
-
 		let time = new Date();
-		let hour = time.getHours();
-		let min = time.getMinutes();
-
 		let hour24 = time.getHours();
 		let min24 = time.getMinutes();
+		console.log("24 HOURS: ", hour24, min24)
 
+        hour24 = hour24 < 10 ? "" + hour24 : hour24;
+        min24 = min24 < 10 ? "0" + min24 : min24;
 
-		if (hour > 12) {
-			hour -= 12;
-		}
-		if (hour === 0) {
-			hour = 12;
-		}
-
-
-		// NO FLIP ANIMATION
-		function defaultClock(){
-			hour = hour < 10 ? "" + hour : hour;
-			min = min < 10 ? "0" + min : min;
-
-			hour24 = hour24 < 10 ? "" + hour24 : hour24;
-			min24 = min24 < 10 ? "0" + min24 : min24;
-
-
-			if (toggleButton24h.checked){
-				document.getElementById("hours").innerHTML = hour24;
-				document.getElementById("minutes").innerHTML = min24;
-			}
-			else{
-				document.getElementById("hours").innerHTML = hour;
-				document.getElementById("minutes").innerHTML = min;
-			}
-
-			document.getElementById('minutes').style.display = "block";
-			document.getElementById('hours').style.display = "block";
-		}
 
 		// FLIP ANIMATION
 		function flipClock(){
-			if (min < 10){
-				document.querySelector(".hidden_0").classList.remove("hide");
-				document.getElementsByClassName("flip_container")[1].style.marginLeft = "16vw";
-			}
-			else{
-				document.querySelector(".hidden_0").classList.add("hide");
-				document.getElementsByClassName("flip_container")[1].style.marginLeft = "0";
-			}
-			if (min24 < 10) {
-				document.querySelector(".hidden_0").classList.remove("hide");
-				document.getElementsByClassName("flip_container")[1].style.marginLeft = "16vw";
-			}
-			else {
-				document.querySelector(".hidden_0").classList.add("hide");
-				document.getElementsByClassName("flip_container")[1].style.marginLeft = "0";
-			}
-
-			if (toggleButton24h.checked) {
-				flip(document.querySelector("[data-hour-tens]"), hour24)
-				flip(document.querySelector("[data-minute-tens]"), min24)
-
-				console.log("24 HOURS: ", hour24, min24)
-			}
-			else {
-				flip(document.querySelector("[data-hour-tens]"), hour)
-				flip(document.querySelector("[data-minute-tens]"), min)
-
-				console.log("12 HOURS: ", hour, min)
-			}
+            flip(document.querySelector("[data-hour-tens]"), hour24)
+            flip(document.querySelector("[data-minute-tens]"), min24)
 
 			document.getElementsByClassName('flip_container')[0].style.display = "block";
 			document.getElementsByClassName('flip_container')[1].style.display = "block";
@@ -346,41 +258,38 @@
 		flipClock();
 	}
 
+    // FLIP ANIMATIONS MAIN FUNCTION
+    function flip(flipCard, newNumber) {
+        const topHalf = flipCard.querySelector(".top")
+        const startNumber = parseInt(topHalf.textContent)
+        if (newNumber === startNumber) return
+
+        const bottomHalf = flipCard.querySelector(".bottom")
+        const topFlip = document.createElement("div")
+        topFlip.classList.add("top-flip")
+        const bottomFlip = document.createElement("div")
+        bottomFlip.classList.add("bottom-flip")
+
+        top.textContent = startNumber
+        bottomHalf.textContent = startNumber
+        topFlip.textContent = startNumber
+        bottomFlip.textContent = newNumber
+
+        topFlip.addEventListener("animationstart", e => {
+            topHalf.textContent = newNumber
+        })
+        topFlip.addEventListener("animationend", e => {
+            topFlip.remove()
+        })
+        bottomFlip.addEventListener("animationend", e => {
+            bottomHalf.textContent = newNumber
+            bottomFlip.remove()
+        })
+        flipCard.append(topFlip, bottomFlip)
+    }
+
+    setInterval(showTime, 1000);
+
 	showTime();
-
-	// FLIP ANIMATIONS MAIN FUNCTION
-	function flip(flipCard, newNumber) {
-		const topHalf = flipCard.querySelector(".top")
-		const startNumber = parseInt(topHalf.textContent)
-		if (newNumber === startNumber) return
-
-		const bottomHalf = flipCard.querySelector(".bottom")
-		const topFlip = document.createElement("div")
-		topFlip.classList.add("top-flip")
-		const bottomFlip = document.createElement("div")
-		bottomFlip.classList.add("bottom-flip")
-
-		top.textContent = startNumber
-		bottomHalf.textContent = startNumber
-		topFlip.textContent = startNumber
-		bottomFlip.textContent = newNumber
-
-		topFlip.addEventListener("animationstart", e => {
-			topHalf.textContent = newNumber
-		})
-		topFlip.addEventListener("animationend", e => {
-			topFlip.remove()
-		})
-		bottomFlip.addEventListener("animationend", e => {
-			bottomHalf.textContent = newNumber
-			bottomFlip.remove()
-		})
-		flipCard.append(topFlip, bottomFlip)
-	}
-
-	// remove localStorage THEME on reload
-	window.onbeforeunload = function() {
-		localStorage.removeItem('current_theme');
-	}
 </script>
 </html>
