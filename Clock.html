@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" defer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
-            integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+            integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous">
+    </script>
 <style>
 
     /* latin-ext */
@@ -37,7 +38,7 @@
     :root {
         --background: black;
         --line: black;
-        --text: #b7b7b7;
+        --text: #fff;
         --holder: #101010;
         --theme_container_border: rgba(146, 146, 146, 0.481);
         --theme-secondary: white;
@@ -51,7 +52,7 @@
         margin: 0;
         padding: 0;
         height: 100%;
-        font-family: "Bebas Neue";
+        font-family: "Bebas Neue",sans-serif;
         cursor: default;
     }
 
@@ -104,8 +105,6 @@
 
         color: var(--text);
         font-size: clamp(3vw, 4vw, 5vw);
-
-        font-family: Arial;
         font-weight: bold;
 
         margin-left: 7%;
@@ -124,8 +123,6 @@
 
 
         @media only screen and (orientation: portrait) {
-
-            /* FOR MAKING CLOCK IN COLUMN FORMAT */
             .container {
                 flex-direction: column;
                 display: flex;
@@ -139,8 +136,6 @@
             .holder {
                 margin: 0 !important;
             }
-
-            /* FOR MAKING CLOCK IN COLUMN FORMAT */
         }
 
         @media only screen and (orientation: landscape) {
@@ -167,21 +162,9 @@
         color: var(--text);
         transition: all .5s;
     }
-    .flip-card {
-        position: relative;
-        display: inline-flex;
-        flex-direction: column;
-        border-radius: .1em;
-        width: 100%;
-    }
 
     .flip_container{
         padding: 8.6% 0;
-    }
-    .segment{
-        display: flex;
-        justify-content: center;
-        align-items: center;
     }
 
 
@@ -195,101 +178,40 @@
 <!-- FLIP CLOCK -->
 <div class="container">
     <div class="holder">
-        <h2 id='hours'>5</h2>
-
+        <h2 id='hours'>--</h2>
         <div class="flip_container">
-            <div class="container-segment">
-                <div class="segment">
-                    <div class="flip-card" data-hour-tens>
-                        <div class="top">0</div>
-                        <div class="bottom">0</div>
-                    </div>
-                </div>
-            </div>
+            <!-- Conteneurs pour les chiffres de l'heure ici -->
         </div>
-
-        <h3 id='ampm'>PM</h3>
     </div>
 
-    <div class="holder" data-holder-tens>
-        <h2 id='minutes'>33</h2>
-
+    <div class="holder">
+        <h2 id='minutes'>--</h2>
         <div class="flip_container">
-            <div class="container-segment">
-                <div class="segment">
-                    <div class="flip-card" data-minute-tens>
-                        <div class="top">0</div>
-                        <div class="bottom">0</div>
-                    </div>
-                </div>
-            </div>
+            <!-- Conteneurs pour les chiffres des minutes ici -->
         </div>
-
     </div>
 </div>
-</body>
 
 <script>
-	// DISPLAY DEFAULT CLOCKS
-	document.getElementById('hours').style.display = "block";
-	document.getElementById('minutes').style.display = "block";
+	function updateClock() {
+		const now = new Date();
+		const hours = now.getHours();
+		const minutes = now.getMinutes();
 
-	function showTime() {
-		let time = new Date();
-		let hour24 = time.getHours();
-		let min24 = time.getMinutes();
-		console.log("24 HOURS: ", hour24, min24)
+		// Formatage pour afficher un zéro avant les nombres inférieurs à 10
+		const formattedHours = ('0' + hours).slice(-2);
+		const formattedMinutes = ('0' + minutes).slice(-2);
 
-        hour24 = hour24 < 10 ? "" + hour24 : hour24;
-        min24 = min24 < 10 ? "0" + min24 : min24;
-
-
-		// FLIP ANIMATION
-		function flipClock(){
-            flip(document.querySelector("[data-hour-tens]"), hour24)
-            flip(document.querySelector("[data-minute-tens]"), min24)
-
-			document.getElementsByClassName('flip_container')[0].style.display = "block";
-			document.getElementsByClassName('flip_container')[1].style.display = "block";
-
-			document.getElementById('hours').style.display = "none";
-			document.getElementById('minutes').style.display = "none";
-		}
-		flipClock();
+		// Mise à jour de l'heure et des minutes
+		document.getElementById('hours').textContent = formattedHours;
+		document.getElementById('minutes').textContent = formattedMinutes;
 	}
 
-    // FLIP ANIMATIONS MAIN FUNCTION
-    function flip(flipCard, newNumber) {
-        const topHalf = flipCard.querySelector(".top")
-        const startNumber = parseInt(topHalf.textContent)
-        if (newNumber === startNumber) return
+	// Mise à jour de l'horloge chaque seconde
+	setInterval(updateClock, 1000);
 
-        const bottomHalf = flipCard.querySelector(".bottom")
-        const topFlip = document.createElement("div")
-        topFlip.classList.add("top-flip")
-        const bottomFlip = document.createElement("div")
-        bottomFlip.classList.add("bottom-flip")
-
-        top.textContent = startNumber
-        bottomHalf.textContent = startNumber
-        topFlip.textContent = startNumber
-        bottomFlip.textContent = newNumber
-
-        topFlip.addEventListener("animationstart", e => {
-            topHalf.textContent = newNumber
-        })
-        topFlip.addEventListener("animationend", e => {
-            topFlip.remove()
-        })
-        bottomFlip.addEventListener("animationend", e => {
-            bottomHalf.textContent = newNumber
-            bottomFlip.remove()
-        })
-        flipCard.append(topFlip, bottomFlip)
-    }
-
-    setInterval(showTime, 1000);
-
-	showTime();
+	// Mise à jour initiale de l'horloge
+	updateClock();
 </script>
+</body>
 </html>
