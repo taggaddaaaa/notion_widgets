@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compteur Pomodoro Simple</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            padding: 20px;
+            transition: background-color 0.3s;
+            color: white;
+        }
+        .timer-container {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px 0px 30px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .timer {
+            font-size: 64px;
+            margin: 20px;
+            background: white;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        button {
+            font-family: ArialRounded, sans-serif;
+            border: none;
+            cursor: pointer;
+            margin: 20px 0px 0px;
+            padding: 0px 12px;
+            border-radius: 4px;
+            box-shadow: rgb(235, 235, 235) 0px 6px 0px;
+            font-size: 22px;
+            height: 55px;
+            color: rgb(56, 133, 138);
+            font-weight: bold;
+            width: 200px;
+            background-color: white;
+            transition: color 0.5s ease-in-out 0s;
+        }
+        button:focus {
+            outline: none;
+        }
+        .work-mode {
+            background-color: #BA4949; /* Couleur pour le timer de travail */
+        }
+        .work-mode button {
+            color: #BA4949; /* Couleur pour le timer de travail */
+        }
+        .break-mode {
+            background-color: #37858A; /* Couleur pour le timer de pause */
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="work-mode">
+<div class="timer-container">
+    <div id="workTimer" class="timer">25:00</div>
+    <div id="breakTimer" class="timer hidden">05:00</div>
+    <button id="startStop" class="work-button">START</button>
+    <button id="finish" class="hidden work-button">FINI !</button>
+</div>
+
+
+<script>
+	let countdown;
+	const workTimerDisplay = document.querySelector('#workTimer');
+	const breakTimerDisplay = document.querySelector('#breakTimer');
+	const startStopButton = document.querySelector('#startStop');
+	const finishButton = document.querySelector('#finish');
+	let isWorkTimer = true;
+	let isRunning = false;
+    let timerDuration = 25 * 60; // Initialisation avec la durée du travail de 25 minutes
+
+
+	function startTimer(duration, display) {
+		clearInterval(countdown);
+		let timer = duration, minutes, seconds;
+		countdown = setInterval(function () {
+			minutes = parseInt(timer / 60, 10);
+			seconds = parseInt(timer % 60, 10);
+
+			minutes = minutes < 10 ? "0" + minutes : minutes;
+			seconds = seconds < 10 ? "0" + seconds : seconds;
+
+			display.textContent = minutes + ":" + seconds;
+
+			if (--timer < 0) {
+				clearInterval(countdown);
+				switchTimer();
+			}
+		}, 1000);
+	}
+
+	function switchTimer() {
+		clearInterval(countdown);
+		isWorkTimer = !isWorkTimer;
+        timerDuration = isWorkTimer ? 25 * 60 : 5 * 60; // Réinitialisation de la durée pour le nouveau timer
+        updateTimerDisplays();
+		isRunning = false;
+		startStopButton.textContent = 'START';
+		finishButton.classList.add('hidden');
+	}
+
+	function updateTimerDisplays() {
+        const body = document.body;
+        if (isWorkTimer) {
+            workTimerDisplay.classList.remove('hidden');
+            breakTimerDisplay.classList.add('hidden');
+            workTimerDisplay.textContent = '25:00';
+            body.classList.remove('break-mode');
+            body.classList.add('work-mode');
+            startStopButton.classList.remove('break-button');
+            startStopButton.classList.add('work-button');
+            finishButton.classList.remove('break-button');
+            finishButton.classList.add('work-button');
+        } else {
+            workTimerDisplay.classList.add('hidden');
+            breakTimerDisplay.classList.remove('hidden');
+            breakTimerDisplay.textContent = '05:00';
+            body.classList.remove('work-mode');
+            body.classList.add('break-mode');
+            startStopButton.classList.remove('work-button');
+            startStopButton.classList.add('break-button');
+            finishButton.classList.remove('work-button');
+            finishButton.classList.add('break-button');
+        }
+	}
+
+	startStopButton.addEventListener('click', function () {
+        if (!isRunning) {
+            startTimer(timerDuration, isWorkTimer ? workTimerDisplay : breakTimerDisplay);
+            this.textContent = 'PAUSE';
+            finishButton.classList.remove('hidden');
+            isRunning = true;
+        } else {
+            clearInterval(countdown);
+            let currentTime = isWorkTimer ? workTimerDisplay.textContent : breakTimerDisplay.textContent;
+            let [minutes, seconds] = currentTime.split(':').map(Number);
+            timerDuration = minutes * 60 + seconds; // Sauvegarde du temps restant
+            this.textContent = 'START';
+            finishButton.classList.add('hidden');
+            isRunning = false;
+        }
+	});
+
+	finishButton.addEventListener('click', function () {
+		switchTimer();
+	});
+</script>
+</body>
+</html>
