@@ -81,27 +81,35 @@
 	let timerDuration = 25 * 60; // Initialisation avec la durée du travail de 25 minutes
 
 
-	function startTimer(duration, display) {
-		clearInterval(countdown);
-		let timer = duration, minutes, seconds;
+		function startTimer(duration, display) {
+            clearInterval(countdown);
+            let timer = duration, minutes, seconds;
 
-		countdown = setInterval(function () {
-			minutes = parseInt(timer / 60, 10);
-			seconds = parseInt(timer % 60, 10);
+            // Mettre à jour l'affichage immédiatement avant de démarrer l'intervalle
+            updateDisplay(timer, display);
+
+            countdown = setInterval(function () {
+                timer--;
+                updateDisplay(timer, display);
+
+                if (timer <= 0) {
+                    clearInterval(countdown);
+                    switchTimer();
+                }
+            }, 1000);
+        }
+
+		function updateDisplay(timer, display) {
+			let minutes = parseInt(timer / 60, 10);
+			let seconds = parseInt(timer % 60, 10);
 
 			minutes = minutes < 10 ? "0" + minutes : minutes;
 			seconds = seconds < 10 ? "0" + seconds : seconds;
 
 			display.textContent = minutes + ":" + seconds;
+		}
 
-			if (--timer < 0) {
-				clearInterval(countdown);
-				switchTimer();
-			}
-		}, 1000);
-	}
-
-	function switchTimer() {
+		function switchTimer() {
 		clearInterval(countdown);
 		if (isWorkTimer) {
 			launchConfetti(); // Lancer les confettis à la fin du timer de travail
@@ -157,22 +165,23 @@
 	}
 
 
-	startStopButton.addEventListener('click', function () {
-		if (!isRunning) {
-			startTimer(timerDuration, isWorkTimer ? workTimerDisplay : breakTimerDisplay);
-			this.textContent = 'PAUSE';
-			finishButton.classList.remove('hidden');
-			isRunning = true;
-		} else {
-			clearInterval(countdown);
-			let currentTime = isWorkTimer ? workTimerDisplay.textContent : breakTimerDisplay.textContent;
-			let [minutes, seconds] = currentTime.split(':').map(Number);
-			timerDuration = minutes * 60 + seconds; // Sauvegarde du temps restant
-			this.textContent = 'START';
-			finishButton.classList.add('hidden');
-			isRunning = false;
-		}
-	});
+    startStopButton.addEventListener('click', function () {
+        if (!isRunning) {
+            // Démarrez le compteur avec une seconde de moins pour tenir compte de la mise à jour immédiate
+            startTimer(timerDuration - 1, isWorkTimer ? workTimerDisplay : breakTimerDisplay);
+            this.textContent = 'PAUSE';
+            finishButton.classList.remove('hidden');
+            isRunning = true;
+        } else {
+            clearInterval(countdown);
+            let currentTime = isWorkTimer ? workTimerDisplay.textContent : breakTimerDisplay.textContent;
+            let [minutes, seconds] = currentTime.split(':').map(Number);
+            timerDuration = minutes * 60 + seconds; // Enregistrer le temps restant
+            this.textContent = 'START';
+            finishButton.classList.add('hidden');
+            isRunning = false;
+        }
+    });
 
 	finishButton.addEventListener('click', function () {
 		switchTimer();
